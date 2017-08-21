@@ -1,0 +1,65 @@
+<html>
+<head>
+
+<style>
+#map {
+  height: 100%;
+}
+</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+  integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+  crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+  integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+  crossorigin=""></script>
+  
+</head>
+
+<body>
+ <div id="map"></div>
+ 
+<script>
+// center of the map
+var center = [-31.0, 116.0];
+imageBounds = [[-28, 114.0], [-35.0, 119]];
+var heatmap_Url = 'https://3.bp.blogspot.com/-Bafz6DTfCUc/WZfSLYVKn1I/AAAAAAAAAzQ/_xxrFFzBBhwb0unW5r38QqzCgyzkCi5eACLcBGAs/s1600/heatmap.jpg',
+	landline_Url = 'https://1.bp.blogspot.com/-s-wXk2T2118/WZfQq_uLy4I/AAAAAAAAAzA/fJGtLwtWPxcjGhVy-NglsVUh7CjhZZf2QCLcBGAs/s1600/landline_perth.jpg',
+	dem_Url = 'https://1.bp.blogspot.com/-WQJEh6VHNOA/WZfU3c4YjdI/AAAAAAAAAzc/AolvS05iqGIqy4QTD3Y9ZGOy-_0KXaMcACLcBGAs/s1600/dem.jpg',
+	perth_Url = 'https://3.bp.blogspot.com/-h9ObhM-KBjo/WZfQr7suJkI/AAAAAAAAAzE/e1SLpb2Z3FoFAOb2knBAKL6xNXIJFfy_QCLcBGAs/s1600/perth_map_cropped.jpg';
+
+// Create the map
+var map = L.map('map').setView(center, 7);
+
+// Set up the OSM layer
+L.tileLayer(
+  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Data © <a href="http://osm.org/copyright">OpenStreetMap</a>',
+    maxZoom: 18
+  }).addTo(map);
+
+// Wind Farms shape file
+var w1    = L.marker([-34.999327,117.799178]).bindPopup('Albany Wind Farm'),
+    w2    = L.marker([-31.883075,115.931502]).bindPopup('Collgar Wind Farm'),
+    w3    = L.marker([-30.926651,115.535994]).bindPopup('West Hills Wind Farm'),
+    w4    = L.marker([-30.188739,115.294295]).bindPopup('Emu Downs Wind Farm Lookout'),
+    w5    = L.marker([-28.965774,114.810896]).bindPopup('Mumbida Windfarm'),
+    w6    = L.marker([-28.773355,114.766951]).bindPopup('Alinta Wind Farm');
+var windfarms = L.layerGroup([w1,w2,w3,w4,w5,w6]).addTo(map);
+
+//var img_perth = L.imageOverlay(perth_Url, imageBounds).addTo(map).bringToBack();
+var img_heatmap = L.imageOverlay(heatmap_Url, imageBounds, {opacity: 0.8}).addTo(map);
+var img_landline = L.imageOverlay(landline_Url, imageBounds, {opacity: 0.2}).addTo(map);
+//var img_dem = L.imageOverlay(dem_Url, imageBounds).addTo(map);
+
+var overlays = {
+    "Wind Farms": windfarms,
+	"Heat Map": img_heatmap,
+	"Transmission Lines": img_landline,
+	//"DEM": img_dem,
+	//"Perth": img_perth
+};
+L.control.layers(null,overlays).addTo(map);
+
+</script>
+</body>
+</html>
